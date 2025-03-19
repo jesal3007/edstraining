@@ -7,4 +7,5 @@ export default function decorate(block) {
       nestblock.classList.add(index1 + 1);
     });
   });
+  console.log('hi');
 }
