@@ -36,11 +36,12 @@ function sampleRUM(checkpoint, data) {
         collector: (...args) => window.hlx.rum.queue.push(args),
       };
       if (isSelected) {
-        const dataFromErrorObj = (error) => {
-          const errData = { source: 'undefined error' };
+        const datafromerrorobj = (error) => {
+          const errdata = { source: 'undefined error' };
+
           try {
-            errData.target = error.toString();
-            errData.source = error.stack
+            errdata.target = error.toString();
+            errdata.source = error.stack
               .split('\n')
               .filter((line) => line.match(/https?:\/\//))
               .shift()
@@ -50,11 +51,11 @@ function sampleRUM(checkpoint, data) {
           } catch (err) {
             /* error structure was not as expected */
           }
-          return errData;
+          return errdata;
         };
 
         window.addEventListener('error', ({ error }) => {
-          const errData = dataFromErrorObj(error);
+          const errData = datafromerrorobj(error);
           sampleRUM('error', errData);
         });
 
@@ -64,7 +65,7 @@ function sampleRUM(checkpoint, data) {
             target: reason || 'Unknown',
           };
           if (reason instanceof Error) {
-            errData = dataFromErrorObj(reason);
+            errData = datafromerrorobj(reason);
           }
           sampleRUM('error', errData);
         });
@@ -81,11 +82,14 @@ function sampleRUM(checkpoint, data) {
             t: time,
             ...pingData,
           });
-          const urlParams = window.RUM_PARAMS
-            ? `?${new URLSearchParams(window.RUM_PARAMS).toString()}`
+          const urlparams = window.RUM_PARAMS
+            ? `?${new URLSearchParams(window.RUM_PARAMS).toString()}
+
+`
             : '';
           const { href: url, origin } = new URL(
-            `.rum/${weight}${urlParams}`,
+
+            `.rum/${weight}${urlparams}`,
             sampleRUM.collectBaseURL,
           );
           const body = origin === window.location.origin
@@ -333,15 +337,15 @@ function createOptimizedPicture(
  * Set template (page structure) and theme (page styles).
  */
 function decorateTemplateAndTheme() {
-  const addClasses = (element, classes) => {
+  const addclasses = (element, classes) => {
     classes.split(',').forEach((c) => {
       element.classList.add(toClassName(c.trim()));
     });
   };
   const template = getMetadata('template');
-  if (template) addClasses(document.body, template);
+  if (template) addclasses(document.body, template);
   const theme = getMetadata('theme');
-  if (theme) addClasses(document.body, theme);
+  if (theme) addclasses(document.body, theme);
 }
 
 /**
@@ -363,7 +367,6 @@ function wrapTextNodes(block) {
     'H5',
     'H6',
   ];
-
   const wrap = (el) => {
     const wrapper = document.createElement('p');
     wrapper.append(...el.childNodes);
@@ -573,6 +576,7 @@ async function loadBlock(block) {
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
+
     try {
       const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
       const decorationComplete = new Promise((resolve) => {
